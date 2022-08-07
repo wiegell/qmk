@@ -9,12 +9,11 @@
 #define _COL 0
 #define _SYMB 1
 #define _NAV 2
-#define _ADJUST 3
-#define _NUM 4
-#define _WIN 5
-#define _NAV_WIN 6
-#define _SYMB_WIN 7
-#define _NUM_WIN 8
+#define _NUM 3
+#define _WIN 4
+#define _NAV_WIN 5
+#define _SYMB_WIN 6
+#define _NUM_WIN 7
 
 enum custom_keycodes {
   COL = SAFE_RANGE,
@@ -28,7 +27,6 @@ enum custom_keycodes {
   MAIL_WIN,
   SYMB,
   NAV,
-  ADJUST,
   NUM,
   WIN,
   WDH,
@@ -38,6 +36,20 @@ enum custom_keycodes {
   WINPIPE,
   WINFORWQ
 };
+            
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+  // Use `static` variable to remember the previous status.
+ bool win_on = IS_LAYER_ON_STATE(state, _WIN) || IS_LAYER_ON_STATE(state, _SYMB_WIN) || IS_LAYER_ON_STATE(state, _NAV_WIN) || IS_LAYER_ON_STATE(state, _NUM_WIN);
+
+  if (win_on) {
+    rgblight_sethsv_noeeprom(100,255,255);
+  } else {
+   rgblight_sethsv_noeeprom(0,0,0);
+  }
+
+  return state;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -235,9 +247,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define KC_NAME LT(_NAV, KC_SPACE)
 #define KC_NAW LT(_NAV_WIN, KC_SPACE)
 
-#define KC_ADEN LT(_ADJUST, KC_END)
-#define KC_ADPU LT(_ADJUST, KC_PGUP)
-
 #define KC_NUMD LT(_NUM, KC_DEL)
 #define KC_NUWD LT(_NUM_WIN, KC_DEL)
 #define KC_SYMV LT(_SYMB, KC_F17)
@@ -267,9 +276,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐                         ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      DEVTOOLS  ,DEVTS    ,KC_W    ,KC_F    ,KC_P    ,KC_G    ,KC_SLCK   ,                        KC_PAUS ,KC_J    ,KC_L    ,KC_U    ,KC_Y    ,DK_MINS   ,TG(_WIN)  ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     LGUI(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T     ,KC_D    ,KC_LBRC ,                          KC_TAB  ,KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE ,DK_ARNG ,
+     LGUI(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T     ,KC_D    ,KC_LBRC ,                          RGB_MODE_RGBTEST  ,KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE ,DK_ARNG ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB ,KC_A      ,KC_X    ,KC_C   ,KC_V   ,KC_B    ,KC_NAPD ,KC_ADPU ,        LGUI(KC_Z) ,KC_RGUI ,KC_K    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_O ,DK_OSTR ,
+     KC_TAB ,KC_A      ,KC_X    ,KC_C   ,KC_V   ,KC_B    ,KC_F17 ,KC_F18 ,        KC_F19 ,KC_F16 ,KC_K    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_O ,DK_OSTR ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
      KC_LCTRL ,KC_Z ,KC_PMNS ,MACX ,         MACC ,  KC_SYMBS ,MACP         ,MT_LSENT ,KC_NAMS     ,KC_NUMD ,  RGUI(KC_S) ,RGUI(KC_T) ,RGUI(KC_W)   ,RGUI(KC_F) 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
@@ -294,7 +303,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐                         ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______ ,_______ ,DK_AMPR ,DK_LABK ,WINCAR ,WINTILT  ,KC_TRNS,                            KC_TRNS,DK_HASH ,DK_QUES ,DK_ASTR ,WINPIPE,_______,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______ ,DK_PERC,DK_LPRN,DK_LBRC ,DK_HALF ,DK_DQUO,KC_TRNS                            ,KC_TRNS,DK_QUOT ,DK_SECT ,DK_RBRC ,DK_RPRN ,_______,XXXXXXX ,
+     _______ ,DK_PERC,DK_LPRN,DK_LBRC ,DK_LABK ,DK_DQUO,KC_TRNS                            ,KC_TRNS,DK_QUOT ,DK_RABK ,DK_RBRC ,DK_RPRN ,_______,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      MAIL_WIN ,DK_LCBR,DK_AT,DK_SLSH,WINBS,VOID   ,KC_TRNS ,KC_TRNS          ,KC_TRNS ,KC_TRNS,WINFORWQ ,DK_EXLM ,DK_EQL ,DK_PLUS ,DK_RCBR , XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
@@ -325,20 +334,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,_______ ,        _______ ,XXXXXXX ,LSLAH ,LGUI(KC_LEFT),LALT(KC_LEFT),LALT(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,    XXXXXXX ,   LCTL(KC_C) ,XXXXXXX ,LGUI(KC_RIGHT) ,XXXXXXX 
-  //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
-  ),
-
-  [_ADJUST] = LAYOUT(
-  //┌────────┬────────┬────────┬────────┬────────┬────────┐                                           ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     XXXXXXX ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,                                            KC_F6   ,KC_F7   ,KC_F8   ,KC_F9   ,KC_F10  ,XXXXXXX ,
-  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐                         ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX   ,RGB_M_P ,RGB_TOG ,RGB_MOD ,RGB_HUD ,RGB_HUI ,                          RGB_SAD ,RGB_SAI ,RGB_VAD ,RGB_VAI ,XXXXXXX ,XXXXXXX ,XXXXXXX ,
-  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,                          XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,
-  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,XXXXXXX ,        XXXXXXX ,_______ ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,
-  //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 

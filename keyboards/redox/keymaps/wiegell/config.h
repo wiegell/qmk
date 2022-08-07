@@ -31,11 +31,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // #define SPLIT_HAND_PIN B7
 
+
 #undef RGBLED_NUM
-#undef RGB_DI_PIN
-#define RGBLIGHT_DEFAULT_VAL 0
+#define RGBLED_NUM 14
+#define RGBLIGHT_HUE_STEP 8
+#define RGBLIGHT_SAT_STEP 8
+#define RGBLIGHT_VAL_STEP 8
+
 #define HOLD_ON_OTHER_KEY_PRESS
 #define TAPPING_TERM 175
 #define COMBO_COUNT 2
 #define COMBO_TERM 500
-#define RGBLIGHT_DEFAULT_VAL 0
