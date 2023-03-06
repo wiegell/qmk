@@ -51,11 +51,35 @@ enum custom_keycodes {
   NUM,
   NUM_WIN,
   WIN,
+    MACC,
+  MACP,
+  MACX,
 VOID  
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+         case MACC:
+    // Macos copy command
+            if (record->tap.count && record->event.pressed) {
+                tap_code16(LGUI(KC_C)); 
+                return false;        // Return false to ignore further processing of key
+            }
+            break;
+    // Macos paste
+   case MACP:
+            if (record->tap.count && record->event.pressed) {
+                tap_code16(LGUI(KC_V)); 
+                return false;        // Return false to ignore further processing of key
+            }
+            break;
+     // Macos cut
+   case MACX:
+            if (record->tap.count && record->event.pressed) {
+                tap_code16(LGUI(KC_X)); 
+                return false;        // Return false to ignore further processing of key
+            }
+            break;
     case EMPFUNC:
         if (record->event.pressed) {
             // when keycode QMKBEST is pressed
@@ -196,12 +220,13 @@ void matrix_scan_user(void) { // The very important timer.
 #define KC_SYMV LT(_SYMB, KC_F17)
 #define MT_CMDD MT(MOD_LGUI, KC_BSPC)
 #define MT_CMDDD MT(MOD_LGUI, KC_F19)
-#define KC_NAMS LT(_NAV, KC_SPACE)
+#define KC_NAMS KC_SPACE
 #define KC_SYMBS LT(_SYMB, KC_BSPC)
 #define KC_SYW LT(_SYMB_WIN, KC_BSPC)
 #define MT_LSP MT(MOD_LSFT,KC_F18)
 #define MT_LST MT(MOD_LSFT,KC_TAB)
 #define MT_LSENT MT(MOD_LSFT,KC_ENT)
+#define NAVENT LT(_NAV,KC_ENT)
 #define MT_RSOS MT(MOD_RSFT,DK_OSTR)
 #define DEVTOOLS G(LALT(KC_I))
 #define DEVTS G(LSFT(KC_C))
@@ -235,7 +260,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
       MT_LST ,KC_A      ,KC_X    ,KC_C   ,KC_V   ,KC_B    ,DK_ARNG                             ,KC_F16  ,KC_K    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_O ,MT_RSOS ,
   //├────────┼────────┼────────┼────────┼────────┴────────┼────────┼────────┤       ├────────┼────────┼────────┴────────┼────────┼────────┼────────┼────────┤
-    KC_LCTRL   ,KC_Z    ,KC_PMNS ,MT_LACU ,      KC_GTP ,     KC_SYMBS ,MT_LSP         ,MT_LSENT ,KC_NAMS     ,KC_NUMD ,  G(KC_S),G(KC_T),G(KC_W),G(KC_F) 
+    KC_LCTRL   ,KC_Z    ,KC_PMNS ,MACX ,         MACC ,  KC_SYMBS ,MACP              ,NAVENT ,KC_NAMS     ,KC_NUMD,  G(KC_S),G(KC_T),G(KC_W),G(KC_F) 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
     [_SYMB] = LAYOUT_wiegell(

@@ -19,7 +19,9 @@ enum custom_keycodes {
   COL = SAFE_RANGE,
   EMPFUNC,
   LSLAH,
+  LSNOLAH,
   HOME,
+  HOME_WIN,
   DIRUP,
   THIS,
   VOID,
@@ -29,13 +31,52 @@ enum custom_keycodes {
   NAV,
   NUM,
   WIN,
+  WINC,
+  WINP,
+  WINX,
+  MACC,
+  MACP,
+  MACX,
   WDH,
   WINTILT,
   WINCAR,
   WINBS,
   WINPIPE,
-  WINFORWQ
+  WINFORWQ,
+  EACUTE
 };
+
+// Shortcut to make keymap more readable
+#define SYM_L   MO(_SYMB)
+#define NUM_L   MO(_NUM)
+
+#define KC_ALAS LALT_T(KC_PAST)
+
+#define KC_NAPD LT(_NAV, KC_PGDN)
+#define KC_NAME LT(_NAV, KC_SPACE)
+#define KC_NAW KC_SPACE
+
+#define KC_NUMD LT(_NUM, KC_DEL)
+#define KC_NUWD LT(_NUM_WIN, KC_DEL)
+#define KC_SYMV LT(_SYMB, KC_F17)
+#define MT_CMDD MT(MOD_LGUI, KC_BSPC)
+#define MT_CMDDD MT(MOD_LGUI, KC_F19)
+
+#define KC_NAMS KC_SPACE
+#define KC_SYMBS LT(_SYMB, KC_BSPC)
+#define KC_SYW LT(_SYMB_WIN, KC_BSPC)
+#define MACC LGUI_T(LGUI(KC_C))
+#define MACP MT(MOD_LSFT,LGUI(KC_V))
+#define MACX MT(MOD_RALT,LGUI(KC_X))
+#define WINC MT(MOD_LCTL,LCTL(KC_C))
+#define WINP MT(MOD_RSFT,RCTL(KC_V))
+#define WINX MT(MOD_LALT,LCTL(KC_X))
+#define MT_LST MT(MOD_LSFT,KC_TAB)
+#define NAVENT LT(_NAV,KC_ENT)
+#define WINNAVENT LT(_NAV_WIN,KC_ENT)
+#define DEVTOOLS LGUI(LALT(KC_I))
+#define DEVTS LGUI(LSFT(KC_C))
+#define KC_CTC LCTL_T(KC_F17)
             
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -51,6 +92,14 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 }
 
+void led_set_keymap(uint8_t usb_led) {
+  if (!(usb_led & (1<<USB_LED_NUM_LOCK))) {
+    register_code(KC_NUMLOCK);
+    unregister_code(KC_NUMLOCK);
+  }
+}
+
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
        case WINBS:
@@ -61,7 +110,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_KP_2);
           unregister_code(KC_KP_2);
           unregister_code(KC_LALT);
-
             }
             break;  
       case WINFORWQ:
@@ -112,7 +160,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             }
             break;
-   case LGUI_T(LGUI(KC_C)):
+   case MACC:
     // Macos copy command
             if (record->tap.count && record->event.pressed) {
                 tap_code16(LGUI(KC_C)); 
@@ -120,35 +168,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
     // Macos paste
-   case LSFT_T(LGUI(KC_V)):
+   case MACP:
             if (record->tap.count && record->event.pressed) {
                 tap_code16(LGUI(KC_V)); 
                 return false;        // Return false to ignore further processing of key
             }
             break;
      // Macos cut
-   case MT(MOD_LALT,LGUI(KC_X)):
+   case MACX:
             if (record->tap.count && record->event.pressed) {
                 tap_code16(LGUI(KC_X)); 
                 return false;        // Return false to ignore further processing of key
             }
             break;
     //Win copy
-   case LCTL_T(LCTL(KC_C)):
+   case WINC:
             if (record->tap.count && record->event.pressed) {
                 tap_code16(LCTL(KC_C)); 
                 return false;        // Return false to ignore further processing of key
             }
             break;
     // Win paste
-   case RSFT_T(RCTL(KC_V)):
+   case WINP:
             if (record->tap.count && record->event.pressed) {
                 tap_code16(RCTL(KC_V)); 
                 return false;        // Return false to ignore further processing of key
             }
             break;
    // Win cut
-   case MT(MOD_LSFT,LALT(KC_X)):
+   case WINX:
             if (record->tap.count && record->event.pressed) {
                 tap_code16(LCTL(KC_X)); 
                 return false;        // Return false to ignore further processing of key
@@ -195,10 +243,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             // when keycode QMKBEST is released
         }
         break;
+   case LSNOLAH:
+        if (record->event.pressed) {
+            // when keycode QMKBEST is pressed
+            SEND_STRING("ls"SS_TAP(X_ENT));
+        } else {
+            // when keycode QMKBEST is released
+        }
+        break;
    case DIRUP:
         if (record->event.pressed) {
             // when keycode QMKBEST is pressed
             SEND_STRING("cd .."SS_TAP(X_ENT));
+        } else {
+            // when keycode QMKBEST is released
+        }
+        break;
+   case HOME_WIN:
+        if (record->event.pressed) {
+            // when keycode QMKBEST is pressed
+            SEND_STRING("cd ");
+          register_code(KC_LALT);
+          register_code(KC_KP_1);
+          unregister_code(KC_KP_1);
+          register_code(KC_KP_2);
+          unregister_code(KC_KP_2);
+          register_code(KC_KP_6);
+          unregister_code(KC_KP_6);
+          unregister_code(KC_LALT);
+            SEND_STRING(SS_TAP(X_ENT));
         } else {
             // when keycode QMKBEST is released
         }
@@ -233,54 +306,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             // when keycode QMKBEST is released
         }
         break;
+   case EACUTE:
+        if (record->event.pressed) {
+            // when keycode QMKBEST is pressed
+            tap_code(KC_EQL);
+            tap_code(KC_E);
+        } else {
+            // when keycode QMKBEST is released
+        }
+        break;
     }
     return true;
 };
-
-// Shortcut to make keymap more readable
-#define SYM_L   MO(_SYMB)
-#define NUM_L   MO(_NUM)
-
-#define KC_ALAS LALT_T(KC_PAST)
-
-#define KC_NAPD LT(_NAV, KC_PGDN)
-#define KC_NAME LT(_NAV, KC_SPACE)
-#define KC_NAW LT(_NAV_WIN, KC_SPACE)
-
-#define KC_NUMD LT(_NUM, KC_DEL)
-#define KC_NUWD LT(_NUM_WIN, KC_DEL)
-#define KC_SYMV LT(_SYMB, KC_F17)
-#define MT_CMDD MT(MOD_LGUI, KC_BSPC)
-#define MT_CMDDD MT(MOD_LGUI, KC_F19)
-
-#define KC_NAMS LT(_NAV, KC_SPACE)
-#define KC_SYMBS LT(_SYMB, KC_BSPC)
-#define KC_SYW LT(_SYMB_WIN, KC_BSPC)
-#define MACC LGUI_T(LGUI(KC_C))
-#define MACP MT(MOD_LSFT,LGUI(KC_V))
-#define MACX MT(MOD_LALT,LGUI(KC_X))
-#define WINC MT(MOD_LCTL,LCTL(KC_C))
-#define WINP MT(MOD_RSFT,RCTL(KC_V))
-#define WINX MT(MOD_LALT,LALT(KC_X))
-#define MT_LST MT(MOD_LSFT,KC_TAB)
-#define MT_LSENT MT(MOD_LSFT,KC_ENT)
-#define DEVTOOLS LGUI(LALT(KC_I))
-#define DEVTS LGUI(LSFT(KC_C))
-#define KC_CTC LCTL_T(KC_F17)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_COL] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                                           ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     KC_ESC ,KC_F1    ,KC_F2    ,KC_F3    ,KC_F4    ,KC_F14    ,                                       KC_F6    ,KC_F7   ,KC_F8   ,LSG(KC_A),LSG(KC_R),KC_F11 ,
+     KC_ESC ,KC_F1    ,KC_F2    ,KC_F3    ,KC_F4    ,KC_F5    ,                                       KC_F6    ,KC_F7   ,KC_F8   ,LSG(KC_A),LSG(KC_R),KC_F11 ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐                         ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      DEVTOOLS  ,DEVTS    ,KC_W    ,KC_F    ,KC_P    ,KC_G    ,KC_SLCK   ,                        KC_PAUS ,KC_J    ,KC_L    ,KC_U    ,KC_Y    ,DK_MINS   ,TG(_WIN)  ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     LGUI(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T     ,KC_D    ,KC_LBRC ,                          RGB_MODE_RGBTEST  ,KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE ,DK_ARNG ,
+     LGUI(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T     ,KC_D    ,KC_LBRC ,                          C(KC_G)  ,KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE ,DK_ARNG ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_TAB ,KC_A      ,KC_X    ,KC_C   ,KC_V   ,KC_B    ,KC_F17 ,KC_F18 ,        KC_F19 ,KC_F16 ,KC_K    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_O ,DK_OSTR ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     KC_LCTRL ,KC_Z ,KC_PMNS ,MACX ,         MACC ,  KC_SYMBS ,MACP         ,MT_LSENT ,KC_NAMS     ,KC_NUMD ,  RGUI(KC_S) ,RGUI(KC_T) ,RGUI(KC_W)   ,RGUI(KC_F) 
+     KC_LCTRL ,KC_Z ,EACUTE ,MACX ,         MACC ,  KC_SYMBS ,MACP                  ,NAVENT ,KC_NAMS     ,KC_NUMD ,  RGUI(KC_S),RGUI(KC_T),RGUI(KC_W) ,RGUI(KC_F) 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
@@ -314,11 +365,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                                           ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______ ,_______ ,_______ ,_______ ,_______ ,_______ ,                                            _______ ,_______ ,_______ ,_______ ,_______ ,_______ ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐                         ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,KC_MS_U ,XXXXXXX ,KC_WH_D ,XXXXXXX ,_______ ,                          _______ ,HOME ,WDH,C(KC_BSPC),C(KC_DEL),XXXXXXX ,RESET ,
+     XXXXXXX ,XXXXXXX ,KC_MS_U ,XXXXXXX ,KC_WH_D ,XXXXXXX ,_______ ,                          _______ ,HOME_WIN ,WDH,C(KC_BSPC),C(KC_DEL),XXXXXXX ,RESET ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,KC_MS_L ,KC_MS_D ,KC_MS_R ,KC_WH_U ,XXXXXXX ,_______ ,                          _______ ,DIRUP ,KC_LEFT  ,KC_DOWN  ,KC_UP ,C(KC_END) ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,_______ ,        _______ ,XXXXXXX ,LSLAH ,KC_HOME,C(KC_LEFT),C(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,_______ ,        _______ ,XXXXXXX ,LSNOLAH ,KC_HOME,C(KC_LEFT),C(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,    XXXXXXX ,   C(KC_C) ,XXXXXXX ,KC_END ,XXXXXXX 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
@@ -347,7 +398,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,XXXXXXX ,        XXXXXXX ,_______ ,XXXXXXX ,KC_1    ,KC_2    ,KC_3    ,XXXXXXX ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX 
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
         [_NUM_WIN] = LAYOUT(
@@ -360,7 +411,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,XXXXXXX ,        XXXXXXX ,_______ ,XXXXXXX ,KC_KP_1    ,KC_KP_2    ,KC_KP_3    ,XXXXXXX ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_KP_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX 
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_KP_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
@@ -368,13 +419,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                                           ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_GESC ,KC_F1    ,KC_F2    ,KC_F3    ,KC_F4    ,KC_F5                                           , KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0  ,_______ ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐                         ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     DEVTOOLS  ,KC_E  ,KC_W    ,KC_F    ,KC_P    ,KC_G    ,KC_SLCK   ,                        KC_PAUS ,KC_J ,KC_L  ,KC_U    ,KC_Y    ,_______   ,TG(_WIN)  ,
+     DEVTOOLS  ,KC_E  ,KC_W    ,KC_F    ,KC_P    ,KC_G    ,KC_SLCK   ,                        KC_NUMLOCK ,KC_J ,KC_L  ,KC_U    ,KC_Y    ,_______   ,TG(_WIN)  ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     C(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T    ,KC_D    ,KC_SLCK                            ,KC_PAUS,KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE    ,DK_ARNG ,
+     C(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T    ,KC_D    ,KC_SLCK                            ,LGUI(LSFT(KC_I)),KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE    ,DK_ARNG ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_TAB ,KC_A    ,KC_X    ,KC_C    ,KC_V    ,KC_B    ,KC_NAPD   ,_______        ,_______ ,KC_RGUI ,KC_K    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_O  ,DK_OSTR ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     KC_RCTRL ,KC_Z ,KC_PMNS ,WINX ,   WINC ,        KC_SYW ,WINP          ,MT_LSENT ,KC_NAW     ,KC_NUWD ,  C(KC_S),C(KC_T),C(KC_W),C(KC_F) 
+     KC_RCTRL ,KC_Z ,EACUTE ,WINX ,   WINC ,        KC_SYW ,WINP                    ,WINNAVENT ,KC_NAW     ,KC_NUWD ,     C(KC_S),   C(KC_T),C(KC_W),C(KC_F) 
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
