@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // #define SPLIT_HAND_PIN B7
 
-
 #undef RGBLED_NUM
 #define RGBLED_NUM 14
 #define RGBLIGHT_HUE_STEP 8
@@ -40,5 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define HOLD_ON_OTHER_KEY_PRESS
 #define TAPPING_TERM 175
-#define COMBO_COUNT 2
+#define COMBO_COUNT 6
 #define COMBO_TERM 500
+#define COMBO_MUST_PRESS_IN_ORDER

@@ -30,6 +30,7 @@ enum custom_keycodes {
   SYMB,
   NAV,
   NUM,
+  NUMD,
   WIN,
   WINC,
   WINP,
@@ -56,7 +57,7 @@ enum custom_keycodes {
 #define KC_NAME LT(_NAV, KC_SPACE)
 #define KC_NAW KC_SPACE
 
-#define KC_NUMD LT(_NUM, KC_DEL)
+#define NUMD LT(_NUM, KC_SPACE)
 #define KC_NUWD LT(_NUM_WIN, KC_DEL)
 #define KC_SYMV LT(_SYMB, KC_F17)
 #define MT_CMDD MT(MOD_LGUI, KC_BSPC)
@@ -77,7 +78,7 @@ enum custom_keycodes {
 #define DEVTOOLS LGUI(LALT(KC_I))
 #define DEVTS LGUI(LSFT(KC_C))
 #define KC_CTC LCTL_T(KC_F17)
-            
+
 
 layer_state_t layer_state_set_user(layer_state_t state) {
   // Use `static` variable to remember the previous status.
@@ -111,7 +112,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code(KC_KP_2);
           unregister_code(KC_LALT);
             }
-            break;  
+            break;
       case WINFORWQ:
             if (record->event.pressed) {
           register_code(KC_LALT);
@@ -122,7 +123,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code(KC_LALT);
 
             }
-            break; 
+            break;
    case WINCAR:
             if (record->event.pressed) {
           register_code(KC_LALT);
@@ -163,42 +164,42 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
    case MACC:
     // Macos copy command
             if (record->tap.count && record->event.pressed) {
-                tap_code16(LGUI(KC_C)); 
+                tap_code16(LGUI(KC_C));
                 return false;        // Return false to ignore further processing of key
             }
             break;
     // Macos paste
    case MACP:
             if (record->tap.count && record->event.pressed) {
-                tap_code16(LGUI(KC_V)); 
+                tap_code16(LGUI(KC_V));
                 return false;        // Return false to ignore further processing of key
             }
             break;
      // Macos cut
    case MACX:
             if (record->tap.count && record->event.pressed) {
-                tap_code16(LGUI(KC_X)); 
+                tap_code16(LGUI(KC_X));
                 return false;        // Return false to ignore further processing of key
             }
             break;
     //Win copy
    case WINC:
             if (record->tap.count && record->event.pressed) {
-                tap_code16(LCTL(KC_C)); 
+                tap_code16(LCTL(KC_C));
                 return false;        // Return false to ignore further processing of key
             }
             break;
     // Win paste
    case WINP:
             if (record->tap.count && record->event.pressed) {
-                tap_code16(RCTL(KC_V)); 
+                tap_code16(RCTL(KC_V));
                 return false;        // Return false to ignore further processing of key
             }
             break;
    // Win cut
    case WINX:
             if (record->tap.count && record->event.pressed) {
-                tap_code16(LCTL(KC_X)); 
+                tap_code16(LCTL(KC_X));
                 return false;        // Return false to ignore further processing of key
             }
             break;
@@ -315,6 +316,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             // when keycode QMKBEST is released
         }
         break;
+    case NUMD:
+        if (record->tap.count && record->event.pressed) {
+            tap_code16(C(KC_SPACE)); // Send KC_DQUO on tap
+            return false;        // Return false to ignore further processing of key
+        }
+        break;
     }
     return true;
 };
@@ -323,15 +330,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_COL] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                                           ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     KC_ESC ,KC_F1    ,KC_F2    ,KC_F3    ,KC_F4    ,KC_F5    ,                                       KC_F6    ,KC_F7   ,KC_F8   ,LSG(KC_A),LSG(KC_R),KC_F11 ,
+     KC_ESC ,KC_F1    ,KC_F2    ,KC_F3    ,KC_F4    ,KC_F5    ,                                       KC_F8    ,KC_F9   ,KC_F10   ,KC_F11,   KC_F12    ,KC_F13 ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐                         ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     DEVTOOLS  ,DEVTS    ,KC_W    ,KC_F    ,KC_P    ,KC_G    ,KC_SLCK   ,                        KC_PAUS ,KC_J    ,KC_L    ,KC_U    ,KC_Y    ,DK_MINS   ,TG(_WIN)  ,
+     DEVTOOLS  ,DEVTS    ,KC_W    ,KC_F    ,KC_P    ,KC_G    ,KC_F6   ,                        KC_F7 ,KC_J    ,KC_L    ,KC_U    ,KC_Y    ,DK_MINS   ,TG(_WIN)  ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     LGUI(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T     ,KC_D    ,KC_LBRC ,                          C(KC_G)  ,KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE ,DK_ARNG ,
+     LGUI(KC_Z) ,KC_Q    ,KC_R    ,KC_S    ,KC_T     ,KC_D    ,KC_F14 ,                          C(KC_G)  ,KC_H    ,KC_N    ,KC_E    ,KC_I    ,DK_AE ,DK_ARNG ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_TAB ,KC_A      ,KC_X    ,KC_C   ,KC_V   ,KC_B    ,KC_F17 ,KC_F18 ,        KC_F19 ,KC_F16 ,KC_K    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_O ,DK_OSTR ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     KC_LCTRL ,KC_Z ,EACUTE ,MACX ,         MACC ,  KC_SYMBS ,MACP                  ,NAVENT ,KC_NAMS     ,KC_NUMD ,  RGUI(KC_S),RGUI(KC_T),RGUI(KC_W) ,RGUI(KC_F) 
+     KC_LCTRL ,KC_Z ,EACUTE ,MACX ,             MACC ,    KC_SYMBS ,MACP            ,NAVENT,  KC_NAMS     ,NUMD ,  RGUI(KC_S),RGUI(KC_T),RGUI(KC_W) ,RGUI(KC_F)
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
@@ -343,11 +350,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______ ,DK_PERC,DK_LPRN,DK_LBRC ,DK_HALF ,DK_DQUO,KC_TRNS                            ,KC_TRNS,DK_QUOT ,DK_SECT ,DK_RBRC ,DK_RPRN ,_______,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     MAIL    ,LSA(DK_8),ALGR(DK_QUOT),DK_SLSH,S(ALGR(KC_7)),VOID   ,KC_TRNS ,KC_TRNS          ,KC_TRNS ,KC_TRNS,LSFT(DK_ACUT) ,DK_EXLM ,DK_EQL ,DK_PLUS ,LSA(DK_9) , XXXXXXX ,
+     MAIL    ,RSA(DK_8),ALGR(DK_QUOT),DK_SLSH,S(ALGR(KC_7)),THIS   ,KC_TRNS ,KC_TRNS          ,KC_TRNS ,KC_TRNS,LSFT(DK_ACUT) ,DK_EXLM ,DK_EQL ,DK_PLUS ,RSA(DK_9) , XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     _______ ,EMPFUNC ,_______ ,_______ ,     _______ ,    _______ ,_______ ,        _______ ,_______ ,   _______   ,   _______  ,_______ ,_______ ,_______ 
+     _______ ,EMPFUNC ,_______ ,_______ ,     _______ ,    _______ ,_______ ,        _______ ,_______ ,   _______   ,   _______  ,_______ ,_______ ,_______
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
-  ), 
+  ),
     [_SYMB_WIN] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                                           ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______ ,KC_F1   ,KC_F2   ,KC_F3   ,KC_F4   ,KC_F5   ,                                            KC_F6   ,KC_F7   ,KC_F8   ,KC_F9   ,KC_F10  ,XXXXXXX ,
@@ -358,9 +365,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      MAIL_WIN ,DK_LCBR,DK_AT,DK_SLSH,WINBS,VOID   ,KC_TRNS ,KC_TRNS          ,KC_TRNS ,KC_TRNS,WINFORWQ ,DK_EXLM ,DK_EQL ,DK_PLUS ,DK_RCBR , XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     _______ ,EMPFUNC ,_______ ,_______ ,     _______ ,    _______ ,_______ ,        _______ ,_______ ,   _______   ,   _______  ,_______ ,_______ ,_______ 
+     _______ ,EMPFUNC ,_______ ,_______ ,     _______ ,    _______ ,_______ ,        _______ ,_______ ,   _______   ,   _______  ,_______ ,_______ ,_______
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
-  ), 
+  ),
     [_NAV_WIN] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                                           ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______ ,_______ ,_______ ,_______ ,_______ ,_______ ,                                            _______ ,_______ ,_______ ,_______ ,_______ ,_______ ,
@@ -371,7 +378,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,_______ ,        _______ ,XXXXXXX ,LSNOLAH ,KC_HOME,C(KC_LEFT),C(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,    XXXXXXX ,   C(KC_C) ,XXXXXXX ,KC_END ,XXXXXXX 
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,    XXXXXXX ,   C(KC_C) ,XXXXXXX ,KC_END ,XXXXXXX
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
       [_NAV] = LAYOUT(
@@ -382,9 +389,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┤                         ├────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,KC_MS_L ,KC_MS_D ,KC_MS_R ,KC_WH_U ,XXXXXXX ,_______ ,                          _______ ,DIRUP ,KC_LEFT ,KC_DOWN ,KC_UP   ,LGUI(KC_DEL) ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,_______ ,        _______ ,XXXXXXX ,LSLAH ,LGUI(KC_LEFT),LALT(KC_LEFT),LALT(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
+     XXXXXXX ,XXXXXXX ,S(LALT(KC_O)) ,S(LALT(KC_I)) ,S(LALT(KC_U)) ,LGUI(C(LALT(KC_G))),_______,_______ ,_______,XXXXXXX ,LSLAH ,LGUI(KC_LEFT),LALT(KC_LEFT),LALT(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,    XXXXXXX ,   LCTL(KC_C) ,XXXXXXX ,LGUI(KC_RIGHT) ,XXXXXXX 
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,    XXXXXXX ,   LCTL(KC_C) ,XXXXXXX ,LGUI(KC_RIGHT) ,XXXXXXX
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
@@ -398,7 +405,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,XXXXXXX ,        XXXXXXX ,_______ ,XXXXXXX ,KC_1    ,KC_2    ,KC_3    ,XXXXXXX ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX 
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
         [_NUM_WIN] = LAYOUT(
@@ -411,7 +418,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,XXXXXXX ,        XXXXXXX ,_______ ,XXXXXXX ,KC_KP_1    ,KC_KP_2    ,KC_KP_3    ,XXXXXXX ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_KP_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX 
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,     XXXXXXX ,    XXXXXXX ,XXXXXXX ,        XXXXXXX ,XXXXXXX ,    XXXXXXX ,     KC_KP_0    ,XXXXXXX ,XXXXXXX ,XXXXXXX
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
@@ -425,7 +432,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_TAB ,KC_A    ,KC_X    ,KC_C    ,KC_V    ,KC_B    ,KC_NAPD   ,_______        ,_______ ,KC_RGUI ,KC_K    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_O  ,DK_OSTR ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     KC_RCTRL ,KC_Z ,EACUTE ,WINX ,   WINC ,        KC_SYW ,WINP                    ,WINNAVENT ,KC_NAW     ,KC_NUWD ,     C(KC_S),   C(KC_T),C(KC_W),C(KC_F) 
+     KC_RCTRL ,KC_Z ,EACUTE ,WINX ,   WINC ,        KC_SYW ,WINP                    ,WINNAVENT ,KC_NAW     ,KC_NUWD ,     C(KC_S),   C(KC_T),C(KC_W),C(KC_F)
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
@@ -435,11 +442,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 enum combos {
   WIN_KEY,
-  ALT_F4
+  ALT_F4,
+  SPACE_CHANGE1,
+  SPACE_CHANGE2,
+  UPPER_HALF,
+  LOWER_HALF,
+  COMBO_LENGTH
 };
+
 const uint16_t PROGMEM win_key[] = {WINC, KC_NAW, COMBO_END};
 const uint16_t PROGMEM alt_f4[] = {WINC, KC_Q, COMBO_END};
+const uint16_t PROGMEM space_change1[] = {KC_F18, KC_F19, COMBO_END};
+const uint16_t PROGMEM space_change2[] = {KC_F19, KC_F18, COMBO_END};
+const uint16_t PROGMEM upper_half[] = {KC_F14, KC_F6, COMBO_END};
+const uint16_t PROGMEM lower_half[] = {KC_F6, KC_F14, COMBO_END};
 combo_t key_combos[] = {
+  [SPACE_CHANGE1] = COMBO(space_change1, KC_KP_3),
+  [SPACE_CHANGE2] = COMBO(space_change2, KC_KP_4),
+  [UPPER_HALF] = COMBO(upper_half,RALT(C(KC_UP))),
+  [LOWER_HALF] = COMBO(lower_half,RALT(C(KC_DOWN))),
   [WIN_KEY] = COMBO(win_key, KC_LGUI),
   [ALT_F4] = COMBO_ACTION(alt_f4),
 };
@@ -449,7 +470,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     case ALT_F4:
       if (pressed) {
       register_code(KC_LALT);
-      tap_code16(KC_F4); 
+      tap_code16(KC_F4);
       unregister_code(KC_LALT);
       }
       break;
