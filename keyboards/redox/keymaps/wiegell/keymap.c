@@ -215,7 +215,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case EMPFUNC:
         if (record->event.pressed) {
             // when keycode QMKBEST is pressed
-            SEND_STRING(SS_LSFT(SS_TAP(X_8))"inp"SS_DOWN(X_LSFT)SS_TAP(X_9)" "SS_TAP(X_0)SS_TAP(X_GRV)" "SS_LALT(SS_TAP(X_8))SS_LALT(SS_TAP(X_9))SS_UP(X_LSFT)SS_TAP(X_LEFT)SS_TAP(X_ENT));
+            SEND_STRING("if err !"SS_LSFT(SS_TAP(X_0))" nil "SS_LSFT(SS_LALT(SS_TAP(X_8))SS_LALT(SS_TAP(X_9)))SS_UP(X_LSFT)SS_TAP(X_LEFT)SS_TAP(X_ENT)"return nil, fmt.Errorf"SS_LSFT(SS_TAP(X_8)SS_TAP(X_2))SS_LSFT(SS_TAP(X_DOT))" "SS_LSFT(SS_TAP(X_5))"w"SS_LSFT(SS_TAP(X_2))SS_TAP(X_COMM)" err"SS_LSFT(SS_TAP(X_9))SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT));
         } else {
             // when keycode QMKBEST is released
         }
@@ -378,7 +378,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,XXXXXXX ,_______ ,_______ ,        _______ ,XXXXXXX ,LSNOLAH ,KC_HOME,C(KC_LEFT),C(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,XXXXXXX,LCA(KC_LEFT),LCA(KC_RIGHT),KC_END ,XXXXXXX
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,XXXXXXX ,LCA(KC_LEFT),LCA(KC_RIGHT),KC_END ,XXXXXXX
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
       [_NAV] = LAYOUT(
@@ -391,7 +391,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┐       ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX ,XXXXXXX ,S(LALT(KC_O)) ,S(LALT(KC_I)) ,S(LALT(KC_U)) ,LGUI(C(LALT(KC_G))),_______,_______ ,_______,XXXXXXX ,LSLAH ,LGUI(KC_LEFT),LALT(KC_LEFT),LALT(KC_RIGHT),KC_RIGHT ,XXXXXXX ,
   //├────────┼────────┼────────┼────────┼────┬───┴────┬───┼────────┼────────┤       ├────────┼────────┼───┬────┴───┬────┼────────┼────────┼────────┼────────┤
-     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,_______ ,C(KC_C),LCA(KC_LEFT),LCA(KC_RIGHT),LGUI(KC_RIGHT) ,XXXXXXX
+     XXXXXXX ,XXXXXXX ,XXXXXXX ,KC_LALT ,     XXXXXXX ,    _______ ,_______ ,        _______ ,C(KC_C) ,LCA(KC_BSPC),LCA(KC_LEFT),LCA(KC_RIGHT),LGUI(KC_RIGHT) ,XXXXXXX
   //└────────┴────────┴────────┴────────┘    └────────┘   └────────┴────────┘       └────────┴────────┘   └────────┘    └────────┴────────┴────────┴────────┘
   ),
 
